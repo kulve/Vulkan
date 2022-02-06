@@ -902,6 +902,11 @@ bool VulkanExampleBase::initVulkan()
 {
 	VkResult err;
 
+	vr = vr::Vr();
+	vr.initVr();
+	width = vr.getWidth();
+	height = vr.getHeight();
+
 	// Vulkan instance
 	err = createInstance(settings.validation);
 	if (err) {

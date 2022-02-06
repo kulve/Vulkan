@@ -72,6 +72,8 @@
 #include "camera.hpp"
 #include "benchmark.hpp"
 
+#include "Vr.hpp"
+
 class CommandLineParser
 {
 public:
@@ -174,6 +176,8 @@ protected:
 		VkSemaphore renderComplete;
 	} semaphores;
 	std::vector<VkFence> waitFences;
+	// VR instance
+	vr::Vr vr;
 public:
 	bool prepared = false;
 	bool resized = false;
