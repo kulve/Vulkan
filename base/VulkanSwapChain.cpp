@@ -231,6 +231,24 @@ void VulkanSwapChain::connect(VkInstance instance, VkPhysicalDevice physicalDevi
 */
 void VulkanSwapChain::create(uint32_t *width, uint32_t *height, bool vsync)
 {
+#if defined(D2D_X11)
+	Display	*dpy = XOpenDisplay(NULL);
+	if (dpy == NULL) {
+		vks::tools::exitFatal("failed XOpenDisplay!", -1);
+	}
+
+	PFN_vkAcquireXlibDisplayEXT fn_vkAcquireXlibDisplayEXT = (PFN_vkAcquireXlibDisplayEXT)vkGetInstanceProcAddr(instance, "vkAcquireXlibDisplayEXT");
+	if (fn_vkAcquireXlibDisplayEXT == VK_NULL_HANDLE) {
+		vks::tools::exitFatal("failed to get vkAcquireXlibDisplayEXT function!", -1);
+	}
+
+	VkResult r;
+	r = fn_vkAcquireXlibDisplayEXT(physicalDevice, dpy, vulkanDisplay);
+	if (r != VK_SUCCESS) {
+		vks::tools::exitFatal("failed to vkAcquireXlibDisplayEXT: " + vks::tools::errorString(r), -1);
+	}
+#endif
+
 	// Store the current swap chain handle so we can use it later on to ease up recreation
 	VkSwapchainKHR oldSwapchain = swapChain;
 
@@ -478,6 +496,14 @@ void VulkanSwapChain::createDirect2DisplaySurface(uint32_t width, uint32_t heigh
 	VkDisplayPropertiesKHR* pDisplayProperties = new VkDisplayPropertiesKHR[displayPropertyCount];
 	vkGetPhysicalDeviceDisplayPropertiesKHR(physicalDevice, &displayPropertyCount, pDisplayProperties);
 
+	for (uint32_t i = 0; i < displayPropertyCount; ++i) {
+		VkDisplayPropertiesKHR p = pDisplayProperties[i];
+		std::cout << "display[" << i << "] name     : " << p.displayName << " (" << p.display << ")" << std::endl;
+		std::cout << "  physicalDimensions: " << p.physicalDimensions.width << "x" << p.physicalDimensions.height << std::endl;
+		std::cout << "  physicalResolution: " << p.physicalResolution.width << "x" << p.physicalResolution.height << std::endl;
+		std::cout << "  transforms: " << p.supportedTransforms << std::endl;
+	}
+
 	// Get plane property
 	uint32_t planePropertyCount;
 	vkGetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice, &planePropertyCount, NULL);
@@ -543,6 +569,8 @@ void VulkanSwapChain::createDirect2DisplaySurface(uint32_t width, uint32_t heigh
 			if(display == pDisplays[j])
 			{
 				bestPlaneIndex = i;
+				vulkanDisplay = display;
+				std::cout << "SELECTED DISPLAY: " <<  i << " (" << display << ")" << std::endl;
 				break;
 			}
 		}

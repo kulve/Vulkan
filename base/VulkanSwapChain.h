@@ -53,6 +53,7 @@ public:
 	std::vector<VkImage> images;
 	std::vector<SwapChainBuffer> buffers;
 	uint32_t queueNodeIndex = UINT32_MAX;
+	VkDisplayKHR vulkanDisplay;
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 	void initSurface(void* platformHandle, void* platformWindow);

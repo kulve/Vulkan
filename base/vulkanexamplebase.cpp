@@ -41,6 +41,9 @@ VkResult VulkanExampleBase::createInstance(bool enableValidation)
 	instanceExtensions.push_back(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
 #elif defined(_DIRECT2DISPLAY)
 	instanceExtensions.push_back(VK_KHR_DISPLAY_EXTENSION_NAME);
+	#if defined(D2D_X11)
+	instanceExtensions.push_back(VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME);
+	#endif
 #elif defined(VK_USE_PLATFORM_DIRECTFB_EXT)
 	instanceExtensions.push_back(VK_EXT_DIRECTFB_SURFACE_EXTENSION_NAME);
 #elif defined(VK_USE_PLATFORM_WAYLAND_KHR)
