@@ -616,8 +616,8 @@ public:
 		rotM = glm::rotate(rotM, glm::radians(camera.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		// Left eye
-		left = -aspectRatio * wd2 + 0.5f * eyeSeparation * ndfl;
-		right = aspectRatio * wd2 + 0.5f * eyeSeparation * ndfl;
+		left = -aspectRatio * wd2 - 0.5f * eyeSeparation * ndfl;
+		right = aspectRatio * wd2 - 0.5f * eyeSeparation * ndfl;
 
 		transM = glm::translate(glm::mat4(1.0f), camera.position - camRight * (eyeSeparation / 2.0f));
 
@@ -625,8 +625,8 @@ public:
 		ubo.modelview[0] = rotM * transM;
 
 		// Right eye
-		left = -aspectRatio * wd2 - 0.5f * eyeSeparation * ndfl;
-		right = aspectRatio * wd2 - 0.5f * eyeSeparation * ndfl;
+		left = -aspectRatio * wd2 + 0.5f * eyeSeparation * ndfl;
+		right = aspectRatio * wd2 + 0.5f * eyeSeparation * ndfl;
 
 		transM = glm::translate(glm::mat4(1.0f), camera.position + camRight * (eyeSeparation / 2.0f));
 
