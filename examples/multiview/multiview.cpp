@@ -54,7 +54,7 @@ public:
 	// Camera and view properties
 	float eyeSeparation = 0.08f;
 	const float focalLength = 0.5f;
-	const float fov = 90.0f;
+	float fov = 90.0f;
 	const float zNear = 0.1f;
 	const float zFar = 256.0f;
 
@@ -663,6 +663,9 @@ public:
 
 	void prepare()
 	{
+		eyeSeparation = vr.getEyeSeparation();
+		fov = vr.getFov();
+
 		VulkanExampleBase::prepare();
 		loadAssets();
 		prepareMultiview();
