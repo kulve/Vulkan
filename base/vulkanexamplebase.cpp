@@ -417,6 +417,11 @@ void VulkanExampleBase::renderLoop()
 			viewUpdated = false;
 			viewChanged();
 		}
+
+		vr.update();
+		glm::vec3 vr_rot(vr.getRoll(), vr.getPitch(), vr.getYaw());
+		camera.setRotation(vr_rot);
+
 		render();
 		frameCounter++;
 		auto tEnd = std::chrono::high_resolution_clock::now();
